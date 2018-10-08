@@ -168,6 +168,9 @@ df_genomes <- c("eukaryotes", "prokaryotes", "viruses") %>%
   # no good way of assigning Bacteria or Archaea, so remove
   filter(!(Group == "Other" & fn == "prokaryotes"))
 
+# remove to reduce memory usage
+rm(df_taxa, df_rep, df_ref)
+
 # global variable that holds plot object
 # so we don't need to recreate it to download svg
 plot <- NULL

@@ -63,7 +63,6 @@ ui <- fluidPage(
 )
 
 base_url <- "ftp://ftp.ncbi.nlm.nih.gov/genomes/GENOME_REPORTS/"
-base_url <- "~/Downloads/"
 
 # Download and parse table from NCBI's FTP site
 read_genome_report <- function(fn) {

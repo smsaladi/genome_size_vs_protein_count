@@ -1,4 +1,4 @@
 Title: Genome Size vs. Protein Count
-Version: 0.1
+Version: 1.0
 Depends: R (>= 3.1.0)
 LazyData: true

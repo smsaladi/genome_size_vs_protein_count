@@ -21,50 +21,49 @@ library(svglite)
 library(cowplot)
 
 ui <- fluidPage(
-  tags$div(
-  ),
-   titlePanel("Genome size vs. protein count across NCBI genomes"),
-   
-   # Select archaea/bacteria data source
-   sidebarLayout(
-      sidebarPanel(
-        radioButtons("genomes_to_plot",
-                     "Genomes to plot:",
-                     c("All" = "all",
-                       "Distinct names" = "distinct"),
-                     selected = "distinct"
-                     ),
-        radioButtons("bact_arch_filt",
-                     "Bacterial/Archaeal filter",
-                     c("All" = "all",
-                       "Reference" = "ref",
-                       "Representative" = "rep")
-                     ),
-        checkboxGroupInput("seq_status",
-                           "Sequence type:",
-                           c("Chromosome",
-                             "Complete Genome",
-                             "Contig",
-                             "Scaffold"),
-                           selected = c("Chromosome",
-                                        "Complete Genome",
-                                        "Contig",
-                                        "Scaffold")
-                           ),
-        br(),
-        br(),
-        downloadButton("downloadSVG", "Download SVG")
+  includeHTML("github_corner.html"),
+  titlePanel("Genome size vs. protein count across NCBI genomes"),
+  
+  # Select archaea/bacteria data source
+  sidebarLayout(
+    sidebarPanel(
+      radioButtons("genomes_to_plot",
+                   "Genomes to plot:",
+                   c("All" = "all",
+                     "Distinct names" = "distinct"),
+                   selected = "distinct"
       ),
-      
-      # Show a plot of the generated distribution
-      mainPanel(
-         plotOutput("distPlot", height = "700px")
-      )
-   )
+      radioButtons("bact_arch_filt",
+                   "Bacterial/Archaeal filter",
+                   c("All" = "all",
+                     "Reference" = "ref",
+                     "Representative" = "rep")
+      ),
+      checkboxGroupInput("seq_status",
+                         "Sequence type:",
+                         c("Chromosome",
+                           "Complete Genome",
+                           "Contig",
+                           "Scaffold"),
+                         selected = c("Chromosome",
+                                      "Complete Genome",
+                                      "Contig",
+                                      "Scaffold")
+      ),
+      br(),
+      br(),
+      downloadButton("downloadSVG", "Download SVG")
+    ),
+    
+    # Show a plot of the generated distribution
+    mainPanel(
+      plotOutput("distPlot", height = "700px")
+    )
+  )
 )
 
 base_url <- "ftp://ftp.ncbi.nlm.nih.gov/genomes/GENOME_REPORTS/"
-# base_url <- "~/Downloads/"
+base_url <- "~/Downloads/"
 
 # Download and parse table from NCBI's FTP site
 read_genome_report <- function(fn) {
@@ -91,8 +90,8 @@ read_genome_report <- function(fn) {
   
   if("Size (Kb)" %in% colnames(df))
     df %<>%
-      mutate(`Size (Mb)` = `Size (Kb)` / 1000)
-
+    mutate(`Size (Mb)` = `Size (Kb)` / 1000)
+  
   df %>%
     # Remove if missing the numbers we want
     drop_na(`Size (Mb)`, Genes) %>%
@@ -112,8 +111,10 @@ read_genome_report <- function(fn) {
     distinct(SubGroup, `Size (bp)`, Proteins, .keep_all = TRUE)
 }
 
-
+#
 # Variables to hold data, to avoid downloading dataset everytime the plot is updated
+#
+
 df_taxa <- "overview.txt" %>%
   paste0(base_url, .) %>%
   read_tsv(
@@ -151,6 +152,9 @@ df_ref <- "prok_reference_genomes.txt" %>%
             ref = TRUE) %>%
   distinct()
 
+#
+## Final/full dataframe used for plotting ##
+#
 df_genomes <- c("eukaryotes", "prokaryotes", "viruses") %>%
   map_dfr(read_genome_report) %>%
   left_join(df_taxa, by = c("Group", "SubGroup")) %>%
@@ -167,7 +171,7 @@ df_genomes <- c("eukaryotes", "prokaryotes", "viruses") %>%
 
 plot <- NULL
 
-# Define server logic required to draw a histogram
+# Define server logic required to draw the plot
 server <- function(input, output) {
   output$downloadSVG <- downloadHandler(
     filename = function() {
@@ -178,24 +182,24 @@ server <- function(input, output) {
              width = 5, height = 5, device = "svg")
     }
   )
-   
+  
   output$distPlot <- renderPlot({
-
+    
     df <- df_genomes %>%
       filter(Status %in% input$seq_status)
     
     if(input$genomes_to_plot == "distinct")
       df %<>%
-        group_by(`Superkingdom`, `Organism name`) %>%
-        filter(`Size (bp)` == max(`Size (bp)`))
+      group_by(`Superkingdom`, `Organism name`) %>%
+      filter(`Size (bp)` == max(`Size (bp)`))
     
     if(input$bact_arch_filt == "ref")
       df %<>%
-        filter(ref | Superkingdom %in% c("Eukaryota", "Viruses"))
+      filter(ref | Superkingdom %in% c("Eukaryota", "Viruses"))
     else if(input$bact_arch_filt == "rep")
       df %<>%
-        filter(rep | Superkingdom %in% c("Eukaryota", "Viruses"))
-      
+      filter(rep | Superkingdom %in% c("Eukaryota", "Viruses"))
+    
     plot <- df %>%
       filter(Superkingdom != "Bacteria", Superkingdom != "Viruses") %>%
       ggplot(aes(x = `Size (bp)`, y = Proteins, color = Superkingdom)) +
@@ -216,7 +220,7 @@ server <- function(input, output) {
                                     "Archaea" = "#bf90d7",
                                     "Eukaryota" = "#e19775",
                                     "Viruses" = "#8fcd6b" #, "Viroids" = "#bf90d7"
-                                    )) +
+      )) +
       annotation_logticks() +
       ggtitle("Genome size vs. protein count across NCBI genomes") +
       xlab('Genome size (bp)') +
@@ -228,7 +232,7 @@ server <- function(input, output) {
         legend.position = c(0.15, 0.80)
       )
     plot
-   })
+  })
 }
 
 # Run the application 

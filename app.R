@@ -1,6 +1,6 @@
 #
-# Genome size vs gene count
-# This is a Shiny web application that plots genome size vs gene count,
+# Genome size vs protein count
+# This is a Shiny web application that plots genome size vs protein count,
 # staying up to date with NCBI's statistics
 #
 # Find out more about building applications with Shiny here:
@@ -23,7 +23,7 @@ library(cowplot)
 ui <- fluidPage(
   includeHTML("github_corner.html"),
   titlePanel("Genome size vs. protein count across NCBI genomes"),
-  p("A log-log plot of the total number of annotated genes in genomes submitted to GenBank
+  p("A log-log plot of the total number of annotated proteins in genomes submitted to GenBank
     as a function of genome size (based on data provided by NCBI genome reports). The app stays
     up-to-date since it retrieves data from the NCBI FTP server upon loading."),
   # Select archaea/bacteria data source
@@ -184,7 +184,7 @@ plot <- NULL
 server <- function(input, output) {
   output$downloadSVG <- downloadHandler(
     filename = function() {
-      paste0("genomes_vs_gene_count_", Sys.Date(), ".svg")
+      paste0("Genome_size_vs_protein_count_", Sys.Date(), ".svg")
     },
     content = function(con) {
       ggsave(file = con, plot = plot,

@@ -23,10 +23,15 @@ library(cowplot)
 ui <- fluidPage(
   includeHTML("github_corner.html"),
   titlePanel("Genome size vs. protein count across NCBI genomes"),
-  
+  p("A log-log plot of the total number of annotated genes in genomes submitted to GenBank
+    as a function of genome size (based on data provided by NCBI genome reports). The app stays
+    up-to-date since it retrieves data from the NCBI FTP server upon loading."),
   # Select archaea/bacteria data source
   sidebarLayout(
     sidebarPanel(
+      p("Please be patient. A few large files must first be retrieved from
+         NCBI Genome Reports, so it may take a moment for the initial plot to appear."),
+      br(),
       radioButtons("genomes_to_plot",
                    "Genomes to plot:",
                    c("All" = "all",
@@ -34,7 +39,7 @@ ui <- fluidPage(
                    selected = "distinct"
       ),
       radioButtons("bact_arch_filt",
-                   "Bacterial/Archaeal filter",
+                   "Bacterial/Archaeal filter:",
                    c("All" = "all",
                      "Reference" = "ref",
                      "Representative" = "rep")

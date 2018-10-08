@@ -168,6 +168,8 @@ df_genomes <- c("eukaryotes", "prokaryotes", "viruses") %>%
   # no good way of assigning Bacteria or Archaea, so remove
   filter(!(Group == "Other" & fn == "prokaryotes"))
 
+# global variable that holds plot object
+# so we don't need to recreate it to download svg
 plot <- NULL
 
 # Define server logic required to draw the plot
@@ -178,7 +180,7 @@ server <- function(input, output) {
     },
     content = function(con) {
       ggsave(file = con, plot = plot,
-             width = 5, height = 5, device = "svg")
+             width = 10, height = 10, device = "svg")
     }
   )
   
@@ -199,7 +201,7 @@ server <- function(input, output) {
       df %<>%
       filter(rep | Superkingdom %in% c("Eukaryota", "Viruses"))
     
-    plot <- df %>%
+    plot <<- df %>%
       filter(Superkingdom != "Bacteria", Superkingdom != "Viruses") %>%
       ggplot(aes(x = `Size (bp)`, y = Proteins, color = Superkingdom)) +
       # Do it this way so all bacteria and viruses are in back

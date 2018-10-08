@@ -1,0 +1,23 @@
+os: osx
+sudo: false
+
+language: r
+cache: packages
+
+r_packages:
+  - devtools
+  - rsconnect
+  - shiny
+  - tidyverse
+  - cowplot
+  - svglite
+
+r_github_packages:
+  - skranz/dplyrExtras 
+
+script:
+  - "./build.R"
+
+env:
+  global:
+    secure: "Qqy4FMJV8mCZx4ZmwJyyPLbLL8nf6VdYH60OOEbwHdWiOh8+4tp36B62vcZUmSenZrmMe1OPe7GrRTIv3EH/yqxIiK7WmYjkH88bSbMM7MqugDpKP0F0pI2hJiI9HdHbNvVta3N9xlqwbvy4FOHXDDRO18RsYZRih2x1iz/2yhz6dtSt3NiSsGc2Ixf7PLIkdMH6kPIhSQ84Tw2wvcJDgwshUE0tQ9BVFtzzVL9s3jt6cjp0b45jM0D6Sne3waxggEvNHtcdRWjnk6DqUaOlKz448AO59kLtq+1K3iX4gKq1FaoOkIbcfl3WJeJRzptee7hC+/x9uN6pc4fbpi9FS27l6wi7iQ6w5FcgDEQwHzHbqGk4edkPmIGln1E/LtkJwOe4yBeMPl7awg15ZBRo1zyqe167wM5xuR3E2X40AuKiq6sgB8I+Q+HqDiDvVcE344UjId99tACj8w3TMABHmuvXmGsqleku2lXGuV4C3ERg78Rxsue56S+qdAKmw5fihloRgtdvcAFmotibfdDm8R5VtaQnRWmp1VL1vv4PvBvD2FkIvnhBG3RnHzsctN/U9/08bmn1q5q2HpmfZzwS1zxVtI1nO8OwDcG1Z2bYqM/6+Uv1sYCYcbnAjTfFLrly+uAtlo2lR3tfBI+S0xf+hwAnG92nMVUCgzflafy9QjI="

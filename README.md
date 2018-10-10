@@ -1,3 +1,6 @@
+[![DOI](https://data.caltech.edu/badge/152110741.svg)](https://data.caltech.edu/badge/latestdoi/152110741)
+
+
 # Genome size vs. protein count
 
 A Shiny app that plots an up-to-date version of the total number of annotated proteins

@@ -21,6 +21,7 @@ library(svglite)
 library(cowplot)
 
 ui <- fluidPage(
+  tags$head(includeScript("google_analytics.js")),
   includeHTML("github_corner.html"),
   titlePanel("Genome size vs. protein count across NCBI genomes"),
   p("A log-log plot of the total number of annotated proteins in genomes submitted to GenBank
